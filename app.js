@@ -78,11 +78,16 @@ app.get("/", (req, res) => {
 
     //*******************Create Route*************************************** */
      
-    app.post("/listings", async (req, res) => {
-      const newListing = new Listing(req.body);
-      await newListing.save();
-      console.log("New listing created");
-      res.redirect("/listings");
+    
+    app.post("/listings", async (req, res, next) => {
+      try {
+        const newListing = new Listing(req.body);
+        await newListing.save();
+        console.log("New listing created");
+        res.redirect("/listings");
+      } catch (err) {
+        next(err);
+      }
     });
       
     //********************Edit Route*********************************** */
@@ -112,6 +117,13 @@ app.get("/", (req, res) => {
       await Listing.findByIdAndDelete(id);
       console.log("Listing deleted");
       res.redirect("/listings");
+    });
+
+
+   
+    //*******************Error handling using custom middleware****************** */
+    app.use((err, req, res, next) => {
+      res.send("Something went wrong");
     });
 
 
