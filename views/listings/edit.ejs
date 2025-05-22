@@ -11,7 +11,7 @@
   
     <h4> Edit this Listing</h4>
      
-    <form method ="POST" action="/listings/<%= listing._id %>?_method=PUT">
+    <form method ="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation">
 
          <div class="mb-3">
             <lable for ="title" class="form-label"> Title </lable>
@@ -19,8 +19,11 @@
                 type="text" 
                 name="title"
                 value = "<%= listing.title %>" 
+                required
                 class="form-control"
              />    
+             <div class="valid-feedback"> Title looks good! </div>
+             <div class="invalid-feedback"> Enter a catchy title </div>
         </div>
 
     
@@ -33,8 +36,10 @@
              <input type="text"
                name="description"
                value =" <%= listing.description %>"
+               required
                class="form-control"
                />
+               <div class="invalid-feedback"> Enter a short description</div>
         </div>
 
          
@@ -46,8 +51,10 @@
             <input type="text" 
               name="image"
               value = "<%=listing.image %>"
+              required
              class="form-control"
              /> 
+             <div class="invalid-feedback"> Enter a image </div>
         </div>
 
 
@@ -63,7 +70,10 @@
              <input type="number" 
                name="price"
                value = "<%= listing.price %> "
-               class="form-control" />
+               required
+               class="form-control" 
+               />
+               <div class="invalid-feedback"> Enter a valid Price </div>
         </div>
 
     
@@ -72,7 +82,10 @@
           <input type="text" 
            name="country"
            value =" <%= listing.country %>"
-           class="form-control" />
+           required
+           class="form-control" 
+           />
+           <div class="invalid-feedback"> Enter a valid country </div>
         </div>
 
      </div>
@@ -87,15 +100,17 @@
         <input type="text" 
           name="location"
           value = " <%=listing.location %> "
+          required
           class="form-control"
          />
+         <div class="invalid-feedback"> Enter a valid location </div>
       </div>
 
         
      
         
 
-        <button class ="btn btn-dark edit-btn mt-3"> Add </button>
+        <button class ="btn btn-dark edit-btn mt-3"> EDIT </button>
         
 
 
@@ -108,7 +123,7 @@
 </div>
 
 
-
+<script src="/js/script.js"></script>
 
 
 
