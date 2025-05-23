@@ -138,8 +138,9 @@ app.get("/", (req, res) => {
     // });
      
     app.use((err, req, res, next) => {
-  const { statusCode = 500, message = "Something went wrong" } = err;
-  res.status(statusCode).send(message);
+    const { statusCode = 500, message = "Something went wrong" } = err;
+    res.render("error.ejs" , {err});
+    res.status(statusCode).send(message);
 });
 
 
