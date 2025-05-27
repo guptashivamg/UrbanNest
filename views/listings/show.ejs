@@ -48,30 +48,46 @@
  
  <div class="col-8 offset-3">
   <hr>
-     <h4> Leave a Review </h4>
+  <h4>Leave a Review</h4>
 
-     <form action="/listings/<%= listing._id %>/reviews" method="POST" >
-     
-  
-      <div class="mb-3 mt-3'>
-
-        <label for="rating" class="form-label "> Rating </label> 
-        <input type="range" min="1" max="5" id="rating" name="review[rating]" class="form-range" >
-
+  <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
+    <div class="mb-3 mt-3">
+      <label for="rating" class="form-label">Rating</label>
+      <input 
+        type="range" 
+        min="1" 
+        max="5" 
+        id="rating" 
+        name="review[rating]" 
+        class="form-range"
+        required
+      >
+      <div class="invalid-feedback">
+        Please provide a rating
       </div>
+    </div>
 
-      <div class="mb-3 mt-3'>
-
-      
-           <label for="comment" class="form-label" > Comments </label>
-           <textarea name="review[comment]" id="comment" cols="30" rows="10" class="form-control"> </textarea>
-           
+    <div class="mb-3 mt-3">
+      <label for="comment" class="form-label">Comments</label>
+      <textarea 
+        name="review[comment]" 
+        id="comment" 
+        cols="30" 
+        rows="10" 
+        class="form-control" 
+        required
+      ></textarea>
+      <div class="valid-feedback">
+        Looks good!
       </div>
-      <button class="btn btn-outline-dark mb-3"> Submit Button</button>
-     </form>
+      <div class="invalid-feedback">
+        Please add a comment for your review
+      </div>
+    </div>
 
-
- </div>
+    <button class="btn btn-outline-dark mb-3">Submit Review</button>
+  </form>
+</div>
 
 
 </div>

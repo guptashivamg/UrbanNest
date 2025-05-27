@@ -8,6 +8,7 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema } = require("./schema.js");
+const { reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
@@ -48,6 +49,20 @@ const validateListing = (req, res, next) => {
   }
 };
 
+
+
+
+const validateReview = (req, res, next) => {
+  let {error} = reviewSchema.validate(req.body); // reviewSchema vo hai jo humne Joi ki help se create kiya hai hmare server side ko validate karne ke liye
+ 
+  if (error) {
+    let errMsg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(400, errMsg);
+  }
+  else{
+    next();
+  }
+};
 
 
 //**********************Index Route********************************************* */
@@ -141,6 +156,7 @@ app.delete(
 
 app.post(
   "/listings/:id/reviews",
+  validateReview, // middleware to validate the review and it is defined above on line no. 55
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
