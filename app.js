@@ -176,6 +176,28 @@ app.post(
 
 
 
+//************************Review Delete Route**************************** */
+
+app.delete(
+  "/listings/:id/reviews/:reviewId",
+  wrapAsync(async (req, res) => {
+    let { id, reviewId } = req.params;
+     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } }); // review array se reviewId ko match kra k use pull kr ke delete kr denge with the help of pull operator
+
+     await Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/listings/${id}`); // Redirect to the listing page after deleting the review
+  }
+)
+
+);
+
+
+
+
+
+
+
 
 
 //*******************Error handling using custom middleware****************** */

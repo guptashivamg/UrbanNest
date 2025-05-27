@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Review = require("./review.js"); // Import the Review model
 
 const listingSchema = new Schema({
   title: {
@@ -25,6 +26,19 @@ const listingSchema = new Schema({
   ],
   
 });
+
+
+ // Mongoose middleware to delete reviews when a listing is deleted .. It is a post middleware
+listingSchema.post("findOneAndDelete", async(listing) =>{
+   if(listing){
+         await Review.deleteMany({_id: { $in: listing.reviews }});
+   }
+
+  });
+   
+
+
+
 
 const Listing = mongoose.model("Listing", listingSchema);
 
