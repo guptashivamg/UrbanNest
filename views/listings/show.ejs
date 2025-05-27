@@ -9,7 +9,7 @@
 
     </div>
 
-    <div class="card col-6 offset-3 show-card">
+    <div class="card col-6 offset-3 show-card listing-card">
 
       <img src=" <%= listing.image %>" class="card-img-top show-img " alt="listing_image">
       
@@ -87,6 +87,29 @@
 
     <button class="btn btn-outline-dark mb-3">Submit Review</button>
   </form>
+</div>
+
+
+
+
+
+
+<div class="row  col-8 offset-3">
+
+  <hr>
+  <p> <b> All reviews </b> <p>
+
+
+<% for (const review of listing.reviews) { %>
+  <div class="card mb-2 col-5 ms-3 mb-3">
+    <div class="card-body">
+      <h5 class="card-title">Jane Doe</h5>
+      <p class="card-text"><%= review.comment %></p>
+      <p class="card-text">Rating: <%= review.rating %></p>
+    </div>
+  </div>
+<% } %>
+
 </div>
 
 

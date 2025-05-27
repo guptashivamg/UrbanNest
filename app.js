@@ -85,7 +85,7 @@ app.get(
   "/listings/:id",
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate("reviews");
     res.render("listings/show", { listing });
   })
 );
@@ -169,7 +169,8 @@ app.post(
     await listing.save();
 
     console.log("Review added");
-    res.send("Review added successfully");
+    
+    res.redirect(`/listings/${id}`);
   })
 );
 
