@@ -10,6 +10,8 @@ const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema } = require("./schema.js");
 const { reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
+const listings = require("./routes/listing.js");
+const reviews = require("./routes/review.js")
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
@@ -37,168 +39,12 @@ app.get("/", (req, res) => {
 });
 
 
-const validateListing = (req, res, next) => {
-  let {error} = listingSchema.validate(req.body); // listingSchema vo hai jo humne Joi ki help se create kiya hai hmare server side ko validate karne ke liye
- 
-  if (error) {
-    let errMsg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(400, errMsg);
-  }
-  else{
-    next();
-  }
-};
 
+  app.use("/listings" , listings );  // bas ham is single line se ab sare k sare lsiting k routes ko chla pa rhe hai because express router ki help se humne unko modular way me likh diya hai routes folder ke listing.js me 
+   // aur jo ye /listings likha hai ye vo common part hota hai jo humne sabhi listing ke routes me se nikal liya hai and comma listings jo likha hai us se sare listing vale path me check krega vo 
 
-
-
-const validateReview = (req, res, next) => {
-  let {error} = reviewSchema.validate(req.body); // reviewSchema vo hai jo humne Joi ki help se create kiya hai hmare server side ko validate karne ke liye
- 
-  if (error) {
-    let errMsg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(400, errMsg);
-  }
-  else{
-    next();
-  }
-};
-
-
-//**********************Index Route********************************************* */
-app.get(
-  "/listings",
-  wrapAsync(async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings/index", { allListings });
-  })
-);
-
-//*********************New Route************************************* */
-
-app.get("/listings/new", (req, res) => {
-  res.render("listings/new");
-});
-
-//********************Show Route************************************* */
-app.get(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews");
-    res.render("listings/show", { listing });
-  })
-);
-
-//*******************Create Route*************************************** */
-
-app.post(
-  "/listings",
-  validateListing, // middleware to validate the listing and it is defined above on line no. 38
-  wrapAsync(async (req, res, next) => {
-    
-    const newListing = new Listing(req.body);
-    console.log("Request body:", req.body);
-
-    newListing
-      .save()
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    res.redirect("listings");
-  })
-);
-
-//********************Edit Route*********************************** */
-
-app.get(
-  "/listings/:id/edit",
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const listing = await Listing.findById(id);
-    res.render("listings/edit", { listing });
-  })
-);
-
-//******************Update Route******************************************** */
-
-app.put(
-  "/listings/:id",
-  validateListing, // middleware to validate the listing and it is defined above on line no. 38
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const updatedListing = await Listing.findByIdAndUpdate(id, req.body, {
-      runValidators: true,
-      new: true,
-    });
-    console.log("Listing updated");
-    res.redirect("/listings");
-  })
-);
-
-//******************Delete Route******************************************** */
-app.delete(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    await Listing.findByIdAndDelete(id);
-    console.log("Listing deleted");
-    res.redirect("/listings");
-  })
-);
-
-
-//************************Review POst Route************************* */
-
-app.post(
-  "/listings/:id/reviews",
-  validateReview, // middleware to validate the review and it is defined above on line no. 55
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const listing = await Listing.findById(id);
-
-    const newReview = new Review(req.body.review); // req.body.review => due to name="review[comment]"
-
-    listing.reviews.push(newReview);
-
-    await newReview.save();
-    await listing.save();
-
-    console.log("Review added");
-    
-    res.redirect(`/listings/${id}`);
-  })
-);
-
-
-
-//************************Review Delete Route**************************** */
-
-app.delete(
-  "/listings/:id/reviews/:reviewId",
-  wrapAsync(async (req, res) => {
-    let { id, reviewId } = req.params;
-     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } }); // review array se reviewId ko match kra k use pull kr ke delete kr denge with the help of pull operator
-
-     await Review.findByIdAndDelete(reviewId);
-
-    res.redirect(`/listings/${id}`); // Redirect to the listing page after deleting the review
-  }
-)
-
-);
-
-
-
-
-
-
-
-
+  app.use("/listings/:id/reviews" , reviews) // ye review vali sari listing ko use karne ke liya hai  jo ki routes folder ke andar review.js me likhi hui hai  
+  
 
 //*******************Error handling using custom middleware****************** */
 
