@@ -11,10 +11,6 @@ const listingSchema = Joi.object({
 });
 
 
-module.exports = { listingSchema };
-
-
-
 
  const reviewSchema = Joi.object({
 
@@ -25,4 +21,7 @@ module.exports = { listingSchema };
 });
 
 
-module.exports = { reviewSchema};
+module.exports = {
+  listingSchema,
+  reviewSchema,
+};
