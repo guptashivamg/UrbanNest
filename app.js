@@ -62,6 +62,7 @@ app.get("/", (req, res) => {
 
 
 
+
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -84,18 +85,6 @@ app.use((req, res, next) => {
   next();
 }
 );
-
-
-app.get("/demouser", async (req, res) => {
-  let fakeUser = new User({
-    email:"student@gmail.com",
-    username: "student"
-  });
-
-  let registeredUser = await  User.register(fakeUser, "helloworld" ); // ye database me fakeuser ko register kar dega with password "helloworld" 
-  res.send(registeredUser); 
- });
-
 
 
   app.use("/listings" , listingRouter );  // bas ham is single line se ab sare k sare lsiting k routes ko chla pa rhe hai because express router ki help se humne unko modular way me likh diya hai routes folder ke listing.js me 
