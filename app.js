@@ -10,13 +10,14 @@ const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema } = require("./schema.js");
 const { reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/review.js")
+const listingRouter = require("./routes/listing.js");
+const reviewRouter = require("./routes/review.js")
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const userRouter = require("./routes/user.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
@@ -97,10 +98,13 @@ app.get("/demouser", async (req, res) => {
 
 
 
-  app.use("/listings" , listings );  // bas ham is single line se ab sare k sare lsiting k routes ko chla pa rhe hai because express router ki help se humne unko modular way me likh diya hai routes folder ke listing.js me 
+  app.use("/listings" , listingRouter );  // bas ham is single line se ab sare k sare lsiting k routes ko chla pa rhe hai because express router ki help se humne unko modular way me likh diya hai routes folder ke listing.js me 
    // aur jo ye /listings likha hai ye vo common part hota hai jo humne sabhi listing ke routes me se nikal liya hai and comma listings jo likha hai us se sare listing vale path me check krega vo 
 
-  app.use("/listings/:id/reviews" , reviews) // ye review vali sari listing ko use karne ke liya hai  jo ki routes folder ke andar review.js me likhi hui hai  
+  app.use("/listings/:id/reviews" , reviewRouter) // ye review vali sari listing ko use karne ke liya hai  jo ki routes folder ke andar review.js me likhi hui hai  
+
+
+  app.use("/", userRouter); // ye user vali sari listing ko use karne ke liya hai  jo ki routes folder ke andar user.js me likhi hui hai
   
 
 //*******************Error handling using custom middleware****************** */
@@ -111,8 +115,7 @@ app.get("/demouser", async (req, res) => {
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong" } = err;
-  res.render("error.ejs", { err });
-  res.status(statusCode).send(message);
+  res.status(statusCode).render("error.ejs", { err }); // Combine status and render
 });
 
 
