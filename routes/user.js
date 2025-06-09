@@ -16,8 +16,17 @@ router.post(
       const newUser = new User({ username, email });
       const registeredUser = await User.register(newUser, password);
       console.log(registeredUser);
-      req.flash("success", "Welcome to UrbanNest!");
-      res.redirect("/listings");
+      req.login(registeredUser, (err) => { // ye req.login method direct login kar dega user ko after the sign up process and isme bhi callback pass hota hai logout function ki trh hi 
+        if (err) {
+          
+          return next(err);
+        }
+
+        req.flash("success", "Welcome to UrbanNest!");
+        res.redirect("/listings");
+
+      });
+
     } catch (err) {
       console.log(err.message);
       res.redirect("/signup");
@@ -41,5 +50,20 @@ router.post(
     res.redirect("/listings");
   }
 );
+
+
+
+
+router.get("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+    req.flash("success", "Logged out successfully!");
+    res.redirect("/listings");
+  });
+});
+
 
 module.exports = router;

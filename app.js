@@ -82,6 +82,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.currUser = req.user; // ye current user ko hamesha render kar dega taki hume user ki information mil sake
   next();
 }
 );
