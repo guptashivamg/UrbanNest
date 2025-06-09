@@ -1,4 +1,5 @@
 const Listing = require("./models/listing");
+const Review = require("./models/review");
 
 
 
@@ -31,6 +32,19 @@ module.exports.isOwner = async (req, res, next) => { // ye middleware check kare
       let listing = await  Listing.findById(id);
       if(!listing.owner.equals(req.user._id)) {
         req.flash("error", "You are not the owner of this listing!");
+        return res.redirect(`/listings/${id}`);
+      }
+
+      next();
+};
+
+
+module.exports.isReviewAuthor = async(req, res, next) => { // ye middleware check karega ki user review ka author hai ya nahi 
+  const { id } = req.params; 
+  const { reviewId } = req.params;
+      let review = await  Review.findById(reviewId);
+      if(!review.author.equals(req.user._id)) {
+        req.flash("error", "You did not created this review !");
         return res.redirect(`/listings/${id}`);
       }
 

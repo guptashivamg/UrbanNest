@@ -52,9 +52,10 @@
 
   <!-- *************************Review Section********************* -->
 
- 
+  <% if(currUser) { %>
  <div class="col-8 offset-3">
-  <hr>
+  
+ 
   <h4>Leave a Review</h4>
 
   <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
@@ -94,8 +95,12 @@
 
     <button class="btn btn-outline-dark mb-3">Submit Review</button>
   </form>
+ 
 </div>
+ <% } %>
 
+
+ 
 
 
 
@@ -110,7 +115,7 @@
 <% for (const review of listing.reviews) { %>
   <div class="card mb-2 col-5 ms-3 mb-3">
     <div class="card-body">
-      <h5 class="card-title">Jane Doe</h5>
+      <h5 class="card-title"> @<%= review.author.username %> </h5>
       <p class="card-text"><%= review.comment %></p>
       <p class="card-text">Rating: <%= review.rating %></p>
     </div>
