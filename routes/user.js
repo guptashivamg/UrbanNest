@@ -4,10 +4,9 @@ const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const passport = require("passport");
 
-router.get("/signup" , (req , res) => {
-    res.render('users/signup');
+router.get("/signup", (req, res) => {
+  res.render("users/signup");
 });
-
 
 router.post(
   "/signup",
@@ -26,26 +25,20 @@ router.post(
   })
 );
 
-
-
-
 router.get("/login", (req, res) => {
-    res.render("users/login");
-    });
+  res.render("users/login");
+});
 
-
- router.post(
+router.post(
   "/login",
-  
+
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,
-    
   }),
   async (req, res) => {
     req.flash("success", "Welcome back to UrbanNest!");
     res.redirect("/listings");
- 
   }
 );
 
