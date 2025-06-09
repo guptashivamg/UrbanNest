@@ -5,6 +5,7 @@ const Listing = require("../models/listing.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const { listingSchema } = require("../schema.js");
 const { reviewSchema } = require("../schema.js");
+const {isLoggedIn} = require("../middleware.js");
 
 
 const ExpressError = require("../utils/ExpressError.js");
@@ -36,7 +37,9 @@ router.get(
 
 //*********************New Route************************************* */
 
-router.get("/new", (req, res) => {
+router.get("/new", 
+  isLoggedIn,  // ye middleware check krega ki user logged in hia ya nhi..if nhi to use login page par redirect kar dega ye middleware
+  (req, res) => {
   res.render("listings/new");
 });
 
@@ -58,6 +61,7 @@ router.get(
 
 router.post(
   "/",
+  isLoggedIn,
   validateListing, // middleware to validate the listing and it is defined above on line no. 38
   wrapAsync(async (req, res, next) => {
     
@@ -82,6 +86,7 @@ router.post(
 
 router.get(
   "/:id/edit",
+  isLoggedIn , // ye middleware check krega ki user logged in hia ya nhi..if nhi to use login page par redirect kar dega ye middleware
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
@@ -99,6 +104,7 @@ router.get(
 
 router.put(
   "/:id",
+  isLoggedIn ,// ye middleware check krega ki user logged in hia ya nhi..if nhi to use login page par redirect kar dega ye middleware
   validateListing, // middleware to validate the listing and it is defined above on line no. 38
   wrapAsync(async (req, res) => {
     const { id } = req.params;
@@ -115,6 +121,7 @@ router.put(
 //******************Delete Route******************************************** */
 router.delete(
   "/:id",
+  isLoggedIn, 
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndDelete(id);
