@@ -29,8 +29,9 @@
 
 
     <br> <br> 
+     
+    <%   if(currUser && currUser._id.equals(listing.owner._id)) {  %>
    
-   <%   if(currUser && currUser._id.equals(listing.owner._id)) {  %>
     <div class="row mt-4 mb-3">
     <div class="col-2 offset-3">
       <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark w-100">
@@ -44,6 +45,8 @@
       </form>
     </div>
   </div>
+  
+  
   <% } %>
 
 

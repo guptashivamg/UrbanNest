@@ -105,7 +105,7 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong" } = err;
-  res.status(statusCode).render("error.ejs", { err }); // Combine status and render
+  res.status(statusCode).render("listings/error.ejs", { err }); // Changed path to listings/error.ejs
 });
 
 

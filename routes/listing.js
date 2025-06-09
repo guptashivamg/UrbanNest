@@ -5,7 +5,7 @@ const Listing = require("../models/listing.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const { listingSchema } = require("../schema.js");
 const { reviewSchema } = require("../schema.js");
-const {isLoggedIn} = require("../middleware.js");
+const {isLoggedIn , isOwner} = require("../middleware.js");
 
 
 const ExpressError = require("../utils/ExpressError.js");
@@ -89,6 +89,7 @@ router.post(
 router.get(
   "/:id/edit",
   isLoggedIn , // ye middleware check krega ki user logged in hia ya nhi..if nhi to use login page par redirect kar dega ye middleware
+  isOwner, 
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
@@ -107,6 +108,7 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn ,// ye middleware check krega ki user logged in hia ya nhi..if nhi to use login page par redirect kar dega ye middleware
+  isOwner, // middleware to check if the user is the owner of the listing
   validateListing, // middleware to validate the listing and it is defined above on line no. 38
   wrapAsync(async (req, res) => {
     const { id } = req.params;
@@ -124,6 +126,7 @@ router.put(
 router.delete(
   "/:id",
   isLoggedIn, 
+  isOwner, 
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndDelete(id);
