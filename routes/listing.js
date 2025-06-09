@@ -48,11 +48,12 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews");
+    const listing = await Listing.findById(id).populate("reviews").populate("owner");
     if(!listing) {
     req.flash("error", "Listing you requested does not exist!");
     res.redirect("/listings");
     }
+    console.log(listing);
     res.render("listings/show", { listing });
   })
 );
@@ -66,6 +67,7 @@ router.post(
   wrapAsync(async (req, res, next) => {
     
     const newListing = new Listing(req.body);
+    newListing.owner = req.user._id; // is se jo bhi nayi lisitng create hogi jis bhi username ki uska pta laga jayega 
     console.log("Request body:", req.body);
 
        newListing
