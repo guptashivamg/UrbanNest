@@ -10,6 +10,7 @@ const {isLoggedIn , isOwner} = require("../middleware.js");
 
 const ExpressError = require("../utils/ExpressError.js");
 
+const listingController = require("../controllers/listings.js"); // ye controller ko import kiya hai jis se ki hum sare routes ke callback ko access kr pa rahe hai 
 
 
 const validateListing = (req, res, next) => {
@@ -26,43 +27,23 @@ const validateListing = (req, res, next) => {
 
 
 
+
 //**********************Index Route********************************************* */
 router.get(
   "/",
-  wrapAsync(async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings/index", { allListings });
-  })
-);
+  wrapAsync(listingController.index)); //isme jo index ka callback hai vo controller folder ke litings.js file me likha hua hai 
 
 //*********************New Route************************************* */
 
 router.get("/new", 
   isLoggedIn,  // ye middleware check krega ki user logged in hia ya nhi..if nhi to use login page par redirect kar dega ye middleware
-  (req, res) => {
-  res.render("listings/new");
-});
+  listingController.renderNewForm // ye controller ka callback hai jo ki controller folder ke listings.js file me likha hua hai  
+);
 
 //********************Show Route************************************* */
 router.get(
   "/:id",
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const listing = await Listing.findById(id)
-    .populate({
-      path: "reviews",
-      populate: {
-        path: "author", // populate the author field of the reviews 
-      },
-    })
-      .populate("owner");
-    if(!listing) {
-    req.flash("error", "Listing you requested does not exist!");
-    res.redirect("/listings");
-    }
-    console.log(listing);
-    res.render("listings/show", { listing });
-  })
+  wrapAsync(listingController.showListing) 
 );
 
 //*******************Create Route*************************************** */
@@ -71,24 +52,7 @@ router.post(
   "/",
   isLoggedIn,
   validateListing, // middleware to validate the listing and it is defined above on line no. 38
-  wrapAsync(async (req, res, next) => {
-    
-    const newListing = new Listing(req.body);
-    newListing.owner = req.user._id; // is se jo bhi nayi lisitng create hogi jis bhi username ki uska pta laga jayega 
-    console.log("Request body:", req.body);
-
-       newListing
-      .save()
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    
-    req.flash("success", "New listing created successfully!");  
-    res.redirect("listings");
-  })
+  wrapAsync(listingController.createListing) // ye controller ka callback hai jo ki controller folder ke listings.js file me likha hua hai
 );
 
 //********************Edit Route*********************************** */
@@ -97,17 +61,7 @@ router.get(
   "/:id/edit",
   isLoggedIn , // ye middleware check krega ki user logged in hia ya nhi..if nhi to use login page par redirect kar dega ye middleware
   isOwner, 
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const listing = await Listing.findById(id);
-
-    if(!listing) {
-    req.flash("error", "Listing you requested does not exist!");
-    res.redirect("/listings");
-    }
-    
-    res.render("listings/edit", { listing });
-  })
+  wrapAsync(listingController.renderEditForm) // ye controller ka callback hai jo ki controller folder ke listings.js file me likha hua hai
 );
 
 //******************Update Route******************************************** */
@@ -117,16 +71,7 @@ router.put(
   isLoggedIn ,// ye middleware check krega ki user logged in hia ya nhi..if nhi to use login page par redirect kar dega ye middleware
   isOwner, // middleware to check if the user is the owner of the listing
   validateListing, // middleware to validate the listing and it is defined above on line no. 38
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const updatedListing = await Listing.findByIdAndUpdate(id, req.body, {
-      runValidators: true,
-      new: true,
-    });
-    console.log("Listing updated");
-    req.flash("success", " Listing edited successfully!");
-    res.redirect("/listings");
-  })
+  wrapAsync(listingController.updateListing) // ye controller ka callback hai jo ki controller folder ke listings.js file me likha hua hai
 );
 
 //******************Delete Route******************************************** */
@@ -134,13 +79,7 @@ router.delete(
   "/:id",
   isLoggedIn, 
   isOwner, 
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    await Listing.findByIdAndDelete(id);
-    console.log("Listing deleted");
-    req.flash("success", " Listing deleted successfully!");
-    res.redirect("/listings");
-  })
+  wrapAsync(listingController.deleteListing)  // ye controller ka callback hai jo ki  controller foolder ke lsitings.js file me likha hua hai 
 );
 
 
