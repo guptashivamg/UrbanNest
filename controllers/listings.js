@@ -47,9 +47,13 @@ module.exports.showListing =async (req, res) => {
 
 
   module.exports.createListing = async (req, res, next) => {
+
+   let url = req.file.path; 
+   let filename = req.file.filename; 
     
     const newListing = new Listing(req.body);
     newListing.owner = req.user._id; // is se jo bhi nayi lisitng create hogi jis bhi username ki uska pta laga jayega 
+    newListing.image = { url, filename }; // ye image ki url aur filename ko set karega jo ki cloudinary se aayegi
     console.log("Request body:", req.body);
 
        newListing

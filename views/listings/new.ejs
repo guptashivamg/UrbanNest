@@ -6,7 +6,7 @@
 
     <h4>Create a New Listing</h4>
 
-    <form method="POST" action="/listings" novalidate class="needs-validation">
+    <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
       <!-- novalidate is a bootsrap class to handle the form validation part -->
 
       <div class="mb-3">
@@ -35,11 +35,11 @@
       </div>
 
       <div class="mb-3">
-        <lable for="image" class="form-label"> Image Link </lable>
+        <lable for="image" class="form-label"> Upload Image </lable>
         <input
-          type="text"
+          type="file"
           name="image"
-          placeholder="Enter image URL/LINK"
+          
           class="form-control"
         />
       </div>

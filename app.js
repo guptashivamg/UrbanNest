@@ -1,3 +1,8 @@
+if(process.env.NODE_ENV !== "production") { // ye check karta hai ki agar hum production me nahi hai to hi ye dotenv ko use karega
+  require("dotenv").config(); // ye dotenv ko use karne ke liya hai taki hum apne environment variables ko use kar sake
+}
+
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -18,6 +23,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 const userRouter = require("./routes/user.js");
+
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 

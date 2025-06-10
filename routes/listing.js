@@ -12,6 +12,26 @@ const ExpressError = require("../utils/ExpressError.js");
 
 const listingController = require("../controllers/listings.js"); // ye controller ko import kiya hai jis se ki hum sare routes ke callback ko access kr pa rahe hai 
 
+const multer =require("multer");
+
+const {storage} = require("../cloudConfig.js"); // ye cloudConfig.js file se storage ko import kiya hai jo ki cloudinary ke liye hai
+
+const upload = multer({ storage }); // multer ka use file upload karne ke liye hota hai
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const validateListing = (req, res, next) => {
   let {error} = listingSchema.validate(req.body); // listingSchema vo hai jo humne Joi ki help se create kiya hai hmare server side ko validate karne ke liye
@@ -52,8 +72,10 @@ router.post(
   "/",
   isLoggedIn,
   validateListing, // middleware to validate the listing and it is defined above on line no. 38
+  upload.single("image"), // ye multer ka middleware hai jo ki file ko upload karega aur image ke naam se file ko access karega
   wrapAsync(listingController.createListing) // ye controller ka callback hai jo ki controller folder ke listings.js file me likha hua hai
 );
+
 
 //********************Edit Route*********************************** */
 
