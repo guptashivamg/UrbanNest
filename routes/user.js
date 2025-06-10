@@ -5,39 +5,31 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const passport = require("passport");
 const  { saveRedirectUrl } = require("../middleware.js");
 
-router.get("/signup", (req, res) => {
-  res.render("users/signup");
-});
 
+const userController =require("../controllers/users.js"); // ye controller ko import kiya hai jis se ki hum sare routes ke callback ko access kr pa rahe hai
+
+// **********************User Sign Up Form Rendering route***********************
+
+router.get("/signup", userController.renderSignupForm); // ye controller ka callback hai jo ki controller folder ke users.js file me likha hua hai
+
+
+
+//*********************User Sign Up route************************ */
 router.post(
   "/signup",
-  wrapAsync(async (req, res) => {
-    try {
-      let { username, email, password } = req.body;
-      const newUser = new User({ username, email });
-      const registeredUser = await User.register(newUser, password);
-      console.log(registeredUser);
-      req.login(registeredUser, (err) => { // ye req.login method direct login kar dega user ko after the sign up process and isme bhi callback pass hota hai logout function ki trh hi 
-        if (err) {
-          
-          return next(err);
-        }
-
-        req.flash("success", "Welcome to UrbanNest!");
-        res.redirect("/listings");
-
-      });
-
-    } catch (err) {
-      console.log(err.message);
-      res.redirect("/signup");
-    }
-  })
+  wrapAsync(userController.signup), // ye controller ka callback hai jo ki controller folder ke users.js file me likha hua hai)
 );
 
-router.get("/login", (req, res) => {
-  res.render("users/login");
-});
+
+
+//***********************User Login Form Render Route *********************** */
+
+router.get("/login", userController.renderLoginForm); // ye controller ka callback hai jo ki controller folder ke users.js file me likha hua hai
+
+
+
+
+//*********************User Login Route******************************* */
 
 router.post(
   "/login",
@@ -46,25 +38,14 @@ router.post(
     failureFlash: true,
     failureRedirect: "/login",
   }),
-  async (req, res) => {
-    req.flash("success", "Welcome back to Wanderlust!");
-    const redirectUrl = res.locals.redirectUrl || "/listings";
-    res.redirect(redirectUrl);
-  }
+    userController.login // ye controller ka callback hai jo ki controller folder ke users.js file me likha hua hai
 );
 
 
+//*********************User Logout Route******************************* */
 
-router.get("/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      console.log(err);
-      return next(err);
-    }
-    req.flash("success", "Logged out successfully!");
-    res.redirect("/listings");
-  });
-});
+router.get("/logout", userController.logout); // ye controller ka callback hai jo ki controller folder ke users.js file me likha hua hai
+
 
 
 module.exports = router;

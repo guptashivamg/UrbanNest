@@ -8,6 +8,7 @@ const { listingSchema } = require("../schema.js");
 const { reviewSchema } = require("../schema.js");
 const {isLoggedIn , isReviewAuthor} = require("../middleware.js");
 
+const reviewController = require("../controllers/review.js"); // ye controller ko import kiya hai jis se ki hum sare routes ke callback ko access kr pa rahe hai
 
 
 const ExpressError = require("../utils/ExpressError.js");
@@ -35,23 +36,7 @@ router.post(
   "/",
   isLoggedIn, // middleware to check if the user is logged in or not
   validateReview, // middleware to validate the review and it is defined above on line no. 55
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const listing = await Listing.findById(id);
-
-    const newReview = new Review(req.body.review); // req.body.review => due to name="review[comment]"
-    newReview.author = req.user._id; // author ko set kr rhe hai jo ki user ka id hoga jo review post kr rha hia
-
-    listing.reviews.push(newReview);
-
-    await newReview.save();
-    await listing.save();
-
-    console.log("Review added");
-    req.flash("success", " Review Posted successfully!");
-    
-    res.redirect(`/listings/${id}`);
-  })
+  wrapAsync(reviewController.createReview) // ye controller ka callback hai jo ki controller folder ke review.js file me likha hua hai
 );
 
 
@@ -62,16 +47,7 @@ router.delete(
   "/:reviewId",
   isLoggedIn,
   isReviewAuthor,
-  wrapAsync(async (req, res) => {
-    let { id, reviewId } = req.params;
-     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } }); // review array se reviewId ko match kra k use pull kr ke delete kr denge with the help of pull operator
-
-     await Review.findByIdAndDelete(reviewId);
-     req.flash("success", " Review Deleted successfully!");
-
-    res.redirect(`/listings/${id}`); // Redirect to the listing page after deleting the review
-  }
-)
+  wrapAsync(reviewController.deleteReview) // ye controller ka callback hai jo ki controller folder ke review.js file me likha hua hai
 
 );
 
