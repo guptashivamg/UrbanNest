@@ -95,7 +95,14 @@ module.exports.showListing =async (req, res) => {
     const updatedListing = await Listing.findByIdAndUpdate(id, req.body, {
       runValidators: true,
       new: true,
-    });
+      });
+
+     if(typeof req.file !== "undefined") { // ye check karega ki agar file upload hui hai to hi image ko update karega
+      let url = req.file.path; 
+      let filename = req.file.filename; 
+      updatedListing.image = { url, filename }; // ye image ki url aur filename ko set karega jo ki cloudinary se aayegi
+      await updatedListing.save();
+     }
     console.log("Listing updated");
     req.flash("success", " Listing edited successfully!");
     res.redirect("/listings");

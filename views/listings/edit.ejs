@@ -11,7 +11,7 @@
   
     <h4> Edit this Listing</h4>
      
-    <form method ="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation">
+    <form method ="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
 
          <div class="mb-3">
             <lable for ="title" class="form-label"> Title </lable>
@@ -47,14 +47,13 @@
 
 
         <div class="mb-3">
-            <lable for ="image" class="form-label"> Image Link </lable>
-            <input type="text" 
+            <lable for ="image" class="form-label"> Upload New Image </lable>
+            <input 
               name="image"
-              value = "<%=listing.image %>"
-              required
+              type="file"
+              
              class="form-control"
              /> 
-             <div class="invalid-feedback"> Enter a image </div>
         </div>
 
 

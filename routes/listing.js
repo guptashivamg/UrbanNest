@@ -33,6 +33,8 @@ const upload = multer({ storage }); // multer ka use file upload karne ke liye h
 
 
 
+
+
 const validateListing = (req, res, next) => {
   let {error} = listingSchema.validate(req.body); // listingSchema vo hai jo humne Joi ki help se create kiya hai hmare server side ko validate karne ke liye
  
@@ -92,6 +94,7 @@ router.put(
   "/:id",
   isLoggedIn ,// ye middleware check krega ki user logged in hia ya nhi..if nhi to use login page par redirect kar dega ye middleware
   isOwner, // middleware to check if the user is the owner of the listing
+  upload.single("image"), // ye multer ka middleware hai jo ki file ko upload karega aur image ke naam se file ko access karega
   validateListing, // middleware to validate the listing and it is defined above on line no. 38
   wrapAsync(listingController.updateListing) // ye controller ka callback hai jo ki controller folder ke listings.js file me likha hua hai
 );
