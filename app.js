@@ -89,6 +89,12 @@ app.use((req, res, next) => {
 );
 
 
+ app.get("/", (req, res) => {
+  res.redirect("/listings"); // or render a home page like res.render("home")
+});
+
+
+
   app.use("/listings" , listingRouter );  // bas ham is single line se ab sare k sare lsiting k routes ko chla pa rhe hai because express router ki help se humne unko modular way me likh diya hai routes folder ke listing.js me 
    // aur jo ye /listings likha hai ye vo common part hota hai jo humne sabhi listing ke routes me se nikal liya hai and comma listings jo likha hai us se sare listing vale path me check krega vo 
 
