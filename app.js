@@ -89,6 +89,9 @@ app.use((req, res, next) => {
 );
 
 
+ app.get("/", (req, res) => {
+  res.redirect("/listings"); // or render a home page like res.render("home")
+});
  
 
 
@@ -113,9 +116,6 @@ app.use((err, req, res, next) => {
 });
 
 
-app.get("/", (req, res) => {
-  res.redirect("/listings"); // or render a home page like res.render("home")
-});
 
 
 
