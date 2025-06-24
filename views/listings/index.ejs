@@ -9,6 +9,8 @@
                 
                 display: flex;
                 flex-wrap: wrap;
+                align-items: center;
+
 
              }
 
@@ -23,6 +25,8 @@
 
             .filter:hover {
                 opacity: 1;
+                transform: scale(1.2);
+                transition: transform 0.5s;
                 cursor: pointer;
             }
 
@@ -30,6 +34,19 @@
             .filter p{
                 font-size: 1rem;
 
+            }
+
+            .tax-info {
+                display: none;
+            }
+                
+
+            .tax-toggle {
+                border: 1px solid black;
+                border-radius: 1rem;
+                height: 3.5rem;
+                padding: 1rem;
+                
             }
 
 
@@ -179,6 +196,7 @@
                                     <%= listing.title %>
                             </p> </b>
                             &#8377 <%= listing.price.toLocaleString("en-IN") %> /night
+                            <i class="tax-info">  +18% GST</i>
 
                         </div>
                     </div>
@@ -194,7 +212,16 @@
 
     let taxSwitch = document.getElementById("flexSwitchCheckDefault");
     taxSwitch.addEventListener("click", () => {
-        console.log("Switch clicked");
+        let taxInfo = document.getElementsByClassName("tax-info");
+        for(info of taxInfo) {
+            if(info.style.display === "inline") {
+                info.style.display = "none";
+            } 
+            else {
+                info.style.display = "inline";
+            }
+           
+        }  
     });
   </script>
 
