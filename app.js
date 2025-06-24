@@ -89,10 +89,7 @@ app.use((req, res, next) => {
 );
 
 
- app.get("/", (req, res) => {
-  res.redirect("/listings"); // or render a home page like res.render("home")
-});
-
+ 
 
 
   app.use("/listings" , listingRouter );  // bas ham is single line se ab sare k sare lsiting k routes ko chla pa rhe hai because express router ki help se humne unko modular way me likh diya hai routes folder ke listing.js me 
@@ -113,6 +110,11 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong" } = err;
   res.status(statusCode).render("listings/error.ejs", { err }); // Changed path to listings/error.ejs
+});
+
+
+app.get("/", (req, res) => {
+  res.redirect("/listings"); // or render a home page like res.render("home")
 });
 
 
